@@ -1,4 +1,12 @@
 terraform {
+    cloud {
+    organization = "Augustus-infrastructure"
+
+    workspaces {
+      name = "hetzner-infrastructure"
+    }
+  }
+
   required_providers {
     hcloud = {
       source = "hetznercloud/hcloud"

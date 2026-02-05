@@ -2,8 +2,8 @@ name: Deploy Infrastructure
 
 on:
   push:
-    branches: [ "main" ]      # Runs automatically on push
-  workflow_dispatch:          # Allows manual trigger button
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   terraform:
@@ -16,17 +16,17 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Apply
-        # Inject configuration + secrets directly into the environment
         env:
           TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
           TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
           TF_VAR_env: "dev"
           TF_VAR_server_type: "cax11"
         run: |
-          terraform apply \
-            -auto-approve
+          terraform apply -auto-approve
